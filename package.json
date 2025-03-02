@@ -1,0 +1,39 @@
+{
+	"name": "next-start-app",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev --turbopack",
+		"build": "next build",
+		"start": "next start",
+		"lint": "eslint . --ext js,jsx,ts,tsx",
+		"fix": "eslint . --ext js,jsx,ts,tsx --fix",
+		"format": "prettier --write ."
+	},
+	"dependencies": {
+		"class-variance-authority": "^0.7.1",
+		"clsx": "^2.1.1",
+		"lucide-react": "^0.477.0",
+		"next": "15.2.0",
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0",
+		"tailwind-merge": "^3.0.2",
+		"tailwindcss-animate": "^1.0.7"
+	},
+	"devDependencies": {
+		"@eslint/eslintrc": "^3",
+		"@tailwindcss/postcss": "^4",
+		"@trivago/prettier-plugin-sort-imports": "^5.2.2",
+		"@types/node": "^20",
+		"@types/react": "^19",
+		"@types/react-dom": "^19",
+		"eslint": "^9",
+		"eslint-config-next": "15.2.0",
+		"eslint-config-prettier": "^10.0.2",
+		"eslint-plugin-check-file": "^3.1.0",
+		"prettier": "^3.5.2",
+		"prettier-plugin-tailwindcss": "^0.6.11",
+		"tailwindcss": "^4",
+		"typescript": "^5"
+	}
+}
