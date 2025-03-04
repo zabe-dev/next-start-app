@@ -116,6 +116,7 @@ const generateCommitMessage = async (diff) => {
 			.replace(/^["']/, '') // Remove leading quotes
 			.replace(/["']$/, '') // Remove trailing quotes
 			.replace(/\n/g, ' ') // Replace newlines with spaces
+			.replace(/\*$/, '') // Remove trailing '*'
 			.trim();
 
 		// Validate the generated commit message
