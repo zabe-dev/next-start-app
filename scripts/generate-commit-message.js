@@ -3,14 +3,13 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const { OpenAI } = require('openai');
 
-// Validate GitHub Access Token
+// validate github access token
 const GITHUB_ACCESS_TOKEN = process.env.GITHUB_ACCESS_TOKEN;
 if (!GITHUB_ACCESS_TOKEN) {
 	console.error('Error: GitHub access token is missing.');
 	process.exit(1);
 }
 
-// Comprehensive set of conventional commit types with optional scopes
 const COMMIT_TYPES = {
 	feat: 'New feature',
 	fix: 'Bug fix',
@@ -25,16 +24,12 @@ const COMMIT_TYPES = {
 	revert: 'Revert previous commit',
 };
 
-// More flexible validation for conventional commits
+// make sure commit message follows rules set
 const isValidCommitMessage = (message) => {
-	// Remove any leading/trailing whitespace and backticks
 	const cleanedMessage = message.trim().replace(/^`+|`+$/g, '');
-
-	// More flexible regex that allows for optional scope and more varied message formats
 	const conventionalCommitRegex =
 		/^(feat|fix|docs|style|refactor|test|chore|build|ci|perf|revert)(\([a-z0-9-]+\))?:\s*.+$/;
 
-	// Validate length
 	if (cleanedMessage.length > 72) {
 		console.warn(`Warning: Message exceeds 72 characters`);
 		return false;
@@ -75,7 +70,7 @@ const generateUserPrompt = (diff) => `
 		.join('\n')}
 
   Staged Changes Context:
-  ${diff.substring(0, 500)}  // Limit diff context
+  ${diff.substring(0, 500)}  
 `;
 
 const generateCommitMessage = async (diff) => {
@@ -86,7 +81,7 @@ const generateCommitMessage = async (diff) => {
 		});
 
 		const response = await openaiClient.chat.completions.create({
-			model: 'gpt-4o',
+			model: process.env.OPENAI_BASE_MODEL,
 			messages: [
 				{
 					role: 'system',
@@ -98,9 +93,9 @@ const generateCommitMessage = async (diff) => {
 					content: generateUserPrompt(diff),
 				},
 			],
-			temperature: 0.5, // More consistent output
-			max_tokens: 72,
-			top_p: 1,
+			temperature: Number(process.env.OPENAI_TEMPERATURE),
+			max_tokens: Number(process.env.OPENAI_MAX_TOKENS),
+			top_p: Number(process.env.OPENAI_TOP_P),
 		});
 
 		const messageContent = response.choices?.[0]?.message?.content;
@@ -108,7 +103,7 @@ const generateCommitMessage = async (diff) => {
 			throw new Error('No content received from the service');
 		}
 
-		// Clean and validate the commit message
+		// clean and validate the commit message
 		const cleanedMessage = messageContent
 			.trim()
 			.replace(/^`+/, '') // Remove leading backticks
@@ -116,15 +111,16 @@ const generateCommitMessage = async (diff) => {
 			.replace(/^["']/, '') // Remove leading quotes
 			.replace(/["']$/, '') // Remove trailing quotes
 			.replace(/\n/g, ' ') // Replace newlines with spaces
-			.replace(/\*$/, '') // Remove trailing '*'
+			.replace(/\*$/, '') // Remove trailing asterisks
 			.trim();
 
-		// Validate the generated commit message
+		// validate the generated commit message
 		if (!isValidCommitMessage(cleanedMessage)) {
 			console.warn(
 				`Warning: Generated message might not fully meet standards: ${cleanedMessage}`,
 			);
-			// Attempt to manually fix the message
+
+			// attempt to manually fix the message
 			const fixedMessage =
 				cleanedMessage.length > 72
 					? cleanedMessage.substring(0, 72)
@@ -141,7 +137,6 @@ const generateCommitMessage = async (diff) => {
 };
 
 const main = async () => {
-	// Validate commit message file argument
 	if (process.argv.length < 3) {
 		console.error('Error: Commit message file path not provided.');
 		console.error('This script should be run as a Git hook.');
@@ -157,7 +152,6 @@ const main = async () => {
 		const diff = getStagedDiff();
 		const commitMessage = await generateCommitMessage(diff);
 
-		// Write commit message to file
 		fs.writeFileSync(commitMsgFile, commitMessage, 'utf-8');
 
 		console.log('Commit message generated successfully:', commitMessage);
