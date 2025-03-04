@@ -63,19 +63,19 @@ const getStagedDiff = () => {
 };
 
 const generateUserPrompt = (diff) => `
-Generate a conventional commit message that:
-• Uses a standard prefix from: ${Object.keys(COMMIT_TYPES).join(', ')}
-• Optional scope in parentheses is allowed
-• Describes the core change precisely
-• Stays under 72 characters
+  Generate a conventional commit message that:
+    • Uses a standard prefix from: ${Object.keys(COMMIT_TYPES).join(', ')}
+    • Optional scope in parentheses is allowed
+    • Describes the core change precisely
+    • Stays under 72 characters
 
-Commit Type Guidelines:
-${Object.entries(COMMIT_TYPES)
-	.map(([type, description]) => `- ${type}: ${description}`)
-	.join('\n')}
+  Commit Type Guidelines:
+  ${Object.entries(COMMIT_TYPES)
+		.map(([type, description]) => `    - ${type}: ${description}`)
+		.join('\n')}
 
-Staged Changes Context:
-${diff.substring(0, 500)}  // Limit diff context
+  Staged Changes Context:
+  ${diff.substring(0, 500)}  // Limit diff context
 `;
 
 const generateCommitMessage = async (diff) => {
