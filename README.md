@@ -1,6 +1,8 @@
 # Next.js Starter App
 
-## Automatic commit message generation
+Work in progress
+
+Automatic commit message generation
 
 Location: `.git/hooks/prepare-commit-msg`
 
