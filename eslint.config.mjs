@@ -17,21 +17,6 @@ const eslintConfig = [
 			'prefer-arrow-callback': 'error',
 			'prefer-template': 'error',
 			'semi': 'error',
-			'check-file/filename-naming-convention': [
-				'error',
-				{
-					'**/*.{ts,tsx}': 'KEBAB_CASE',
-				},
-				{
-					ignoreMiddleExtensions: true,
-				},
-			],
-			'check-file/folder-naming-convention': [
-				'error',
-				{
-					'app/**/!(__tests__|\\[*\\])': 'KEBAB_CASE',
-				},
-			],
 		},
 	},
 ];
